@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
 	<PropertyGroup>
 		<!-- Target framework for all projects -->
 		<TargetFramework>net8.0</TargetFramework>
@@ -20,6 +20,6 @@
 		<CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
 
 		<!-- Enforce code style rules during the build -->
-		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 </Project>

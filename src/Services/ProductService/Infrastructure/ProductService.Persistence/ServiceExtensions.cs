@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using ProductService.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using ProductService.Persistence.Context;
+using ProductService.Application.Interfaces;
 
 namespace ProductService.Persistence;
 
@@ -11,5 +12,8 @@ public static class ServiceExtensions
     {
         services.AddDbContext<ProductDbContext>(cfg =>
             cfg.UseSqlServer(configuration.GetConnectionString("ProductDbConnection")));
+
+        services.AddScoped<IProductDbContext, ProductDbContext>();
+
     }
 }

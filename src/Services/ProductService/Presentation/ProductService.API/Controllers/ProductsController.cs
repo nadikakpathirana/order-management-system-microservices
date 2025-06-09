@@ -23,24 +23,42 @@ namespace ProductService.API.Controllers
             var query = new GetAllProductQuery();
             var products = await _mediator.Send(query, cancellationToken);
 
-            if (products == null || !products.Any())
-            {
-                return Ok(new List<Product>());
-            }
-
             return Ok(products);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command, CancellationToken cancellationToken)
+        [HttpGet("GetProduct/{id:int}")]
+        public async Task<IActionResult> GetProduct(int id, CancellationToken cancellationToken)
         {
-            if (command == null)
+            var query = new GetProductQuery{ Id = id };
+            var product = await _mediator.Send(query, cancellationToken);
+
+            if (product == null)
             {
-                return BadRequest("Invalid product data.");
+                return NotFound($"Product with ID {id} not found.");
             }
 
-            var newProductId = await _mediator.Send(command, cancellationToken);
-            return CreatedAtAction(nameof(GetAllProducts), new { id = newProductId }, new { Id = newProductId });
+            return Ok(product);
+        }
+
+        [HttpPost("CreateProduct")]
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand createCommand, CancellationToken cancellationToken)
+        {
+            var newProductId = await _mediator.Send(createCommand, cancellationToken);
+            return CreatedAtAction(nameof(CreateProduct), new { id = newProductId }, new { Id = newProductId });
+        }
+
+        [HttpPost("UpdateProduct")]
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommand updateCommand, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(updateCommand, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpPost("DeleteProduct/{id:int}")]
+        public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new DeleteProductCommand{Id = id}, cancellationToken);
+            return Ok(result);
         }
     }
 }

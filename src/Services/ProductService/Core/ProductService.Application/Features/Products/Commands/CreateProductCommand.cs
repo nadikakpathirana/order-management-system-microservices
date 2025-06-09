@@ -1,4 +1,5 @@
 using MediatR;
+using AutoMapper;
 using ProductService.Domain.Entities;
 using ProductService.Application.Interfaces;
 
@@ -13,21 +14,17 @@ public class CreateProductCommand : IRequest<int>
     internal sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, int>
     {
         private readonly IProductDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CreateProductCommandHandler(IProductDbContext context)
+        public CreateProductCommandHandler(IProductDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            var product = new Product
-            {
-                Name = request.Name,
-                Description = request.Description,
-                Rate = request.Rate
-            };
-
+            var product = _mapper.Map<Product>(request);
             await _context.Products.AddAsync(product, cancellationToken);
             await _context.SaveChangesAsync();
 

@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Features.Products.Commands;
 using ProductService.Application.Features.Products.Queries;
-using ProductService.Domain.Models;
+using ProductService.Domain.Entities;
 
 namespace ProductService.API.Controllers
 {

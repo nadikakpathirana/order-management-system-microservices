@@ -1,8 +1,8 @@
-using System;
+using ProductService.Domain.BaseEntities;
 
-namespace ProductService.Domain.Models;
+namespace ProductService.Domain.Entities;
 
-public class Product
+public class Product : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;

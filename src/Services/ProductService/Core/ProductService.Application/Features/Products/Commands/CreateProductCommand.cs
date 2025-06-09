@@ -1,7 +1,7 @@
 using System;
 using MediatR;
 using System.Security.Cryptography;
-using ProductService.Domain.Models;
+using ProductService.Domain.Entities;
 
 namespace ProductService.Application.Features.Products.Commands;
 

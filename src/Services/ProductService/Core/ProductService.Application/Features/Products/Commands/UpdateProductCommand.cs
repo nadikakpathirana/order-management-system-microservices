@@ -1,6 +1,8 @@
 using MediatR;
-using ProductService.Application.Interfaces;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ProductService.Domain.Entities;
+using ProductService.Application.Interfaces;
 
 namespace ProductService.Application.Features.Products.Commands;
 
@@ -14,10 +16,12 @@ public class UpdateProductCommand : IRequest<int>
     internal sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, int>
     {
         private readonly IProductDbContext _context;
+        private readonly IMapper _mapper;
 
-        public UpdateProductCommandHandler(IProductDbContext context)
+        public UpdateProductCommandHandler(IProductDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<int> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
@@ -30,10 +34,7 @@ public class UpdateProductCommand : IRequest<int>
                 throw new KeyNotFoundException($"Product with ID {request.Id} not found.");
             }
 
-            product.Name = request.Name;
-            product.Description = request.Description;
-            product.Rate = request.Rate;
-
+            var updatedProduct = _mapper.Map<Product>(request);
             await _context.SaveChangesAsync();
 
             return product.Id;

@@ -1,7 +1,6 @@
-using System;
 using MediatR;
-using System.Security.Cryptography;
-using ProductService.Domain.Models;
+using ProductService.Domain.Entities;
+using ProductService.Application.Interfaces;
 
 namespace ProductService.Application.Features.Products.Commands;
 
@@ -13,14 +12,26 @@ public class CreateProductCommand : IRequest<int>
 
     internal sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, int>
     {
+        private readonly IProductDbContext _context;
+
+        public CreateProductCommandHandler(IProductDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            // Logic to create a product
+            var product = new Product
+            {
+                Name = request.Name,
+                Description = request.Description,
+                Rate = request.Rate
+            };
 
-            // Simulate saving to a database and returning the new product ID
-            int newProductId = RandomNumberGenerator.GetInt32(1, 1000);
+            await _context.Products.AddAsync(product, cancellationToken);
+            await _context.SaveChangesAsync();
 
-            return await Task.FromResult(newProductId);
+            return product.Id;
         }
     }
 }
